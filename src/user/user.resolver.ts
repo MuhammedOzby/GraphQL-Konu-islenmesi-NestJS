@@ -5,7 +5,9 @@ import {
   Query,
   Resolver,
   ResolveField,
+  Subscription,
 } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { NewUserInput } from './dto/new-user.input';
 import { User } from './models/user.model';
 import { UserService } from './user.service';
@@ -13,6 +15,7 @@ import { EventService } from 'src/event/event.service';
 import { Event } from 'src/event/models/event.model';
 import { UpdateUserInput } from './dto/update-user.input';
 
+const pubSub = new PubSub();
 /**
  * * User modülü resolver parçasıdır burada bulunan fonksiyonlar graphQL
  * * tarafından çağırılanlardır.
@@ -50,7 +53,9 @@ export class UserResolver {
   //* Kullanıcı Ekleme
   @Mutation(() => User)
   async addUser(@Args('data') data: NewUserInput): Promise<User> {
-    return this.userService.addUser(data);
+    const userData = this.userService.addUser(data);
+    pubSub.publish('userAdded', { userAdded: userData });
+    return userData;
   }
   //* Kullanıcı güncelleme
   @Mutation(() => User)
@@ -66,5 +71,20 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async deleteAllUsers(@Args('interact') interact: string): Promise<boolean> {
     return this.userService.deleteAllUsers(interact);
+  }
+  //* Kullanıcı eklendiğinde çalışacak subscription
+  @Subscription(() => User)
+  userAdded() {
+    return pubSub.asyncIterator('userAdded');
+  }
+  //* Sayaç subs test için vardı.
+  @Subscription(() => Number)
+  counter() {
+    let i = 0;
+    setInterval(() => {
+      pubSub.publish('counter', { counter: i });
+      i++;
+    }, 1000);
+    return pubSub.asyncIterator('counter');
   }
 }

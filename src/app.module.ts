@@ -13,6 +13,7 @@ import { ParticipantModule } from './participant/participant.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/schema.gql',
+      installSubscriptionHandlers: true,
     }),
     //* Kullanıcı modülünün ana module import edilmesi.
     UserModule,

@@ -130,3 +130,8 @@ input UpdateParticipantInput {
   user_id: ID!
   event_id: ID!
 }
+
+type Subscription {
+  userAdded: User!
+  counter: Float!
+}
