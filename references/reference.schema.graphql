@@ -1,0 +1,133 @@
+# ------------------- Types for User Start -------------------
+# User
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  events: [Event]
+}
+# User input for mutation
+input addUserInput {
+  username: String!
+  email: String!
+}
+input updateUserInput {
+  id: String!
+  username: String
+  email: String
+}
+# ------------------- Types for User End -------------------
+# ------------------- Types for Event Start -------------------
+type Event {
+  id: ID!
+  title: String!
+  desc: String
+  date: String
+  from: String
+  to: String
+  location_id: ID
+  user_id: ID
+  user: User
+  location: Location
+  participants: [Participant]
+}
+input addEventInput {
+  title: String!
+  desc: String
+  date: String
+  from: String
+  to: String
+  location_id: ID
+  user_id: ID
+}
+input updateEventInput {
+  id: ID!
+  title: String!
+  desc: String
+  date: String
+  from: String
+  to: String
+  location_id: ID
+  user_id: ID
+}
+# ------------------- Types for User End -------------------
+# ------------------- Types for Location Start -------------------
+type Location {
+  id: ID!
+  name: String
+  desc: String
+  lat: Float
+  lng: Float
+}
+input addLocationInput {
+  name: String!
+  desc: String
+  lat: Float
+  lng: Float
+}
+input updateLocationInput {
+  id: ID!
+  name: String
+  desc: String
+  lat: Float
+  lng: Float
+}
+# ------------------- Types for Location End -------------------
+# ------------------- Types for Participant Start -------------------
+type Participant {
+  id: ID!
+  user_id: ID!
+  event_id: ID!
+  user: User!
+  event: Event!
+}
+input addParticipantInput {
+  user_id: ID!
+  event_id: ID!
+}
+input updateParticipantInput {
+  id: ID!
+  user_id: ID
+  event_id: ID
+}
+# ------------------- Types for Participant End -------------------
+# ------------------- Query Start -------------------
+type Query {
+  User(id: ID!): User
+  Users: [User]
+  Event(id: ID!): Event
+  Events: [Event]
+  Location(id: ID!): Location
+  Locations: [Location]
+  Participant(id: ID!): Participant
+  Participants: [Participant]
+}
+# ------------------- Query End -------------------
+# ------------------- Mutation Start -------------------
+type Mutation {
+  # ------------------- Mutation for User Start -------------------
+  addUser(data: addUserInput!): User!
+  updateUser(data: updateUserInput!): User!
+  deleteUser(id: ID!): User!
+  deleteAllUsers(interact: String!): Boolean!
+  # ------------------- Mutation for User End -------------------
+  # ------------------- Mutation for Event Start -------------------
+  addEvent(data: addEventInput!): Event!
+  updateEvent(data: updateEventInput!): Event!
+  deleteEvent(id: ID!): Event!
+  deleteAllEvents(interact: String!): Boolean!
+  # ------------------- Mutation for Event End -------------------
+  # ------------------- Mutation for Location Start -------------------
+  addLocation(data: addLocationInput!): Location!
+  updateLocation(data: updateLocationInput!): Location!
+  deleteLocation(id: ID!): Location!
+  deleteAllLocations(interact: String!): Boolean!
+  # ------------------- Mutation for Location End -------------------
+  # ------------------- Mutation for Participant Start -------------------
+  addParticipant(data: addParticipantInput!): Participant!
+  updateParticipant(data: updateParticipantInput!): Participant!
+  deleteParticipant(id: ID!): Participant!
+  deleteAllParticipants(interact: String!): Boolean!
+  # ------------------- Mutation for Participant End -------------------
+}
+# ------------------- Mutation End -------------------

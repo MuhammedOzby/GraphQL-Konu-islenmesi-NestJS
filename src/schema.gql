@@ -1,0 +1,132 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""location"""
+type Location {
+  id: ID!
+  name: String!
+  desc: String
+  lat: Float
+  lng: Float
+}
+
+"""user"""
+type User {
+  id: ID!
+  username: String!
+  email: String
+  events: [Event!]
+}
+
+"""event"""
+type Event {
+  id: ID!
+  title: String!
+  desc: String
+  date: String
+  from: String
+  to: String
+  location_id: ID
+  user_id: ID
+  user: User
+  location: Location
+  participant: [Participant!]
+}
+
+"""paticipant"""
+type Participant {
+  id: ID!
+  user_id: ID!
+  event_id: ID!
+  user: User!
+  event: Event!
+}
+
+type Query {
+  getUsers: [User!]!
+  getUser(id: Float!): User!
+  getEvents: [Event!]!
+  getEvent: Event!
+  getLocations: [Location!]!
+  getLocation(id: Float!): Location!
+  getParticipants: [Participant!]!
+  getParticipant(id: Float!): Participant!
+}
+
+type Mutation {
+  addUser(data: NewUserInput!): User!
+  updateUser(data: UpdateUserInput!): User!
+  deleteUser(id: Float!): User!
+  deleteAllUsers(interact: String!): Boolean!
+  addEvent(data: NewEventInput!): Event!
+  updateEvent(data: UpdateEventInput!): Event!
+  deleteEvent(id: Float!): Event!
+  deleteAllEvents(interact: String!): Boolean!
+  addLocation(data: NewLocationInput!): Location!
+  updateLocation(data: UpdateLocationInput!): Location!
+  deleteLocation(id: Float!): Location!
+  deletaAllLocation(interact: String!): Location!
+  addParticipant(data: NewParticipantInput!): Participant!
+  updateParticipant(data: UpdateParticipantInput!): Participant!
+  deleteParticipant(id: Float!): Participant!
+  deleteAllParticipant(interact: String!): Boolean!
+}
+
+input NewUserInput {
+  username: String!
+  email: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  username: String!
+  email: String!
+}
+
+input NewEventInput {
+  title: String!
+  desc: String
+  date: String
+  from: String
+  to: String
+  location_id: ID
+  user_id: ID
+}
+
+input UpdateEventInput {
+  id: ID!
+  title: String
+  desc: String
+  date: String
+  from: String
+  to: String
+  location_id: ID
+  user_id: ID
+}
+
+input NewLocationInput {
+  name: String!
+  desc: String!
+  lat: Float!
+  lng: Float!
+}
+
+input UpdateLocationInput {
+  id: ID!
+  name: String!
+  desc: String!
+  lat: Float!
+  lng: Float!
+}
+
+input NewParticipantInput {
+  user_id: ID!
+  event_id: ID!
+}
+
+input UpdateParticipantInput {
+  id: ID!
+  user_id: ID!
+  event_id: ID!
+}
