@@ -74,10 +74,10 @@ export class UserResolver {
   }
   //* Kullanıcı eklendiğinde çalışacak subscription
   @Subscription(() => User)
-  userAdded() {
+  userCreated() {
     return pubSub.asyncIterator('userAdded');
   }
-  //* Sayaç subs test için vardı.
+  //* Sayaç subs test için vardı. Hoşuma gitti kalsın bu burada ☜(ﾟヮﾟ☜)
   @Subscription(() => Number)
   counter() {
     let i = 0;

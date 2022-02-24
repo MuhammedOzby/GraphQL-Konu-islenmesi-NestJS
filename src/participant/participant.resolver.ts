@@ -5,7 +5,9 @@ import {
   Query,
   ResolveField,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { EventService } from 'src/event/event.service';
 import { Event } from 'src/event/models/event.model';
 import { User } from 'src/user/models/user.model';
@@ -15,6 +17,7 @@ import { UpdateParticipantInput } from './dto/update-participant.model';
 import { Participant } from './models/participant.model';
 import { ParticipantService } from './participant.service';
 
+const pubSub = new PubSub();
 /**
  * * Katılımcı modülü resolver parçasıdır burada bulunan fonksiyonlar graphQL
  * * tarafından çağırılanlardır.
@@ -65,7 +68,9 @@ export class ParticipantResolver {
   async addParticipant(
     @Args('data') data: NewParticipantInput,
   ): Promise<Participant> {
-    return this.participantService.addParticipant(data);
+    const participantData = this.participantService.addParticipant(data);
+    pubSub.publish('participantAdded', { participantAdded: participantData });
+    return participantData;
   }
   //* Katılımcı güncelleme
   @Mutation(() => Participant)
@@ -85,5 +90,10 @@ export class ParticipantResolver {
     @Args('interact') interact: string,
   ): Promise<boolean> {
     return this.participantService.deleteAllParticipants(interact);
+  }
+  //* Katılımcı eklendiğinde çalışacak subscription
+  @Subscription(() => Participant)
+  participantAdded() {
+    return pubSub.asyncIterator('participantAdded');
   }
 }

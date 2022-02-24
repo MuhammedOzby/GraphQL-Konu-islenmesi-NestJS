@@ -5,7 +5,9 @@ import {
   Query,
   ResolveField,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { LocationService } from 'src/location/location.service';
 import { Location } from 'src/location/models/location.model';
 import { Participant } from 'src/participant/models/participant.model';
@@ -17,6 +19,7 @@ import { UpdateEventInput } from './dto/update-event.model';
 import { EventService } from './event.service';
 import { Event } from './models/event.model';
 
+const pubSub = new PubSub();
 @Resolver(() => Event)
 export class EventResolver {
   constructor(
@@ -68,7 +71,9 @@ export class EventResolver {
   //* Event Ekleme
   @Mutation(() => Event)
   async addEvent(@Args('data') data: NewEventInput): Promise<Event> {
-    return this.eventService.addEvent(data);
+    const eventData = this.eventService.addEvent(data);
+    pubSub.publish('eventAdded', { eventAdded: eventData });
+    return eventData;
   }
   //* Event güncelleme
   @Mutation(() => Event)
@@ -84,5 +89,10 @@ export class EventResolver {
   @Mutation(() => Boolean)
   async deleteAllEvents(@Args('interact') interact: string): Promise<boolean> {
     return this.eventService.deleteAllEvents(interact);
+  }
+  //* Katılımcı eklendiğinde çalışacak subscription
+  @Subscription(() => Event)
+  eventCreated() {
+    return pubSub.asyncIterator('eventAdded');
   }
 }
