@@ -54,7 +54,7 @@ export class UserResolver {
   @Mutation(() => User)
   async addUser(@Args('data') data: NewUserInput): Promise<User> {
     const userData = this.userService.addUser(data);
-    pubSub.publish('userAdded', { userAdded: userData });
+    pubSub.publish('userCreated', { userCreated: userData });
     return userData;
   }
   //* Kullanıcı güncelleme
@@ -75,7 +75,7 @@ export class UserResolver {
   //* Kullanıcı eklendiğinde çalışacak subscription
   @Subscription(() => User)
   userCreated() {
-    return pubSub.asyncIterator('userAdded');
+    return pubSub.asyncIterator('userCreated');
   }
   //* Sayaç subs test için vardı. Hoşuma gitti kalsın bu burada ☜(ﾟヮﾟ☜)
   @Subscription(() => Number)

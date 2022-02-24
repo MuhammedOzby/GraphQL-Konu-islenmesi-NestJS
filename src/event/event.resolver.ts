@@ -72,7 +72,9 @@ export class EventResolver {
   @Mutation(() => Event)
   async addEvent(@Args('data') data: NewEventInput): Promise<Event> {
     const eventData = this.eventService.addEvent(data);
-    pubSub.publish('eventAdded', { eventAdded: eventData });
+    console.log(eventData);
+
+    pubSub.publish('eventCreated', { eventCreated: eventData });
     return eventData;
   }
   //* Event güncelleme
@@ -93,6 +95,6 @@ export class EventResolver {
   //* Katılımcı eklendiğinde çalışacak subscription
   @Subscription(() => Event)
   eventCreated() {
-    return pubSub.asyncIterator('eventAdded');
+    return pubSub.asyncIterator('eventCreated');
   }
 }

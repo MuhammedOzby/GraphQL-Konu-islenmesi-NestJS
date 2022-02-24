@@ -132,6 +132,8 @@ input UpdateParticipantInput {
 }
 
 type Subscription {
-  userAdded: User!
+  userCreated: User!
   counter: Float!
+  eventCreated: Event!
+  participantAdded: Participant!
 }
